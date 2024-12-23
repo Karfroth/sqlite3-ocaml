@@ -13,3 +13,15 @@
  (targets c_flags.sexp c_library_flags.sexp)
  (action
   (run ./config/discover.exe)))
+
+(rule
+ (targets duckdb_sqlite_wrapper.h libduckdb_bundle.a libsqlite3_api_wrapper_static.a)
+ (action
+  (progn
+    (copy ./duckdb/duckdb_sqlite_wrapper.h ./duckdb_sqlite_wrapper.h)
+    (copy ./duckdb/macos/libduckdb_bundle.a ./libduckdb_bundle.a)
+    (copy ./duckdb/macos/libsqlite3_api_wrapper_static.a ./libsqlite3_api_wrapper_static.a))))
+
+(install
+ (section lib)
+ (files libduckdb_bundle.a libsqlite3_api_wrapper_static.a))

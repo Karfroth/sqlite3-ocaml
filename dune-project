@@ -5,7 +5,7 @@
 (generate_opam_files true)
 
 (source
- (github mmottl/sqlite3-ocaml))
+ (github Karfroth/sqlite3-ocaml))
 
 (license MIT)
 
@@ -13,21 +13,21 @@
 
 (documentation "https://mmottl.github.io/sqlite3-ocaml/api")
 
-(maintainers "Markus Mottl <markus.mottl@gmail.com>")
+(maintainers "Woosang Lee <recollect12@gmail.com>")
 
 (authors "Markus Mottl <markus.mottl@gmail.com>"
-  "Christian Szegedy <csdontspam@metamatix.com>")
+  "Christian Szegedy <csdontspam@metamatix.com>"
+  "Woosang Lee <recollect12@gmail.com>")
 
 (package
  (name sqlite3)
- (synopsis "SQLite3 bindings for OCaml")
+ (synopsis "DuckDB Sqlite3 wrapper bindings for OCaml")
  (description
-   "sqlite3-ocaml is an OCaml library with bindings to the SQLite3 client API.\nSqlite3 is a self-contained, serverless, zero-configuration, transactional SQL\ndatabase engine with outstanding performance for many use cases.")
+   "This is a fork of sqlite3-ocaml.\nduckdb-sqlite3-binding-ocaml is an OCaml library with bindings to the DuckDB's SQLite3 client API wrapper.")
  (depends
   (ocaml
    (>= 4.12))
   dune-configurator
-  (conf-sqlite3 :build)
   (ppx_inline_test :with-test))
  (tags
-  (clib:sqlite3 clib:pthread)))
+  (clib:duckdb clib:pthread)))

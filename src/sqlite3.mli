@@ -480,7 +480,7 @@ val finalize : stmt -> Rc.t
 
 (** {3 Data query} *)
 
-val data_count : stmt -> int
+(* val data_count : stmt -> int *)
 (** [data_count stmt]
     @return
       the number of columns in the result of the last step of statement [stmt].
@@ -854,7 +854,8 @@ val delete_function : db -> string -> unit
 
     @raise SqliteError if an invalid database handle is passed. *)
 
-module Aggregate : sig
+(* NOT SUPPORTED BY DUCKDB: Aggregate function creation is not supported *)
+(* module Aggregate : sig
   (** Create user-defined aggregate and window functions.
 
       Aggregate functions provide the [step] function, which is called once per
@@ -941,9 +942,10 @@ module Aggregate : sig
       under name [name] with database handle [db]. This function has arity [N].
 
       @raise SqliteError if an invalid database handle is passed. *)
-end
+end *)
 
-module Backup : sig
+(* backup is not supported by duckdb *)
+(* module Backup : sig
   type t
   (** Type of a backup between two databases *)
 
@@ -970,7 +972,7 @@ module Backup : sig
   val pagecount : t -> int
   (** [pagecount backup] returns the total number of pages in the source
       database of [backup]. *)
-end
+end *)
 
 (** {2 Utility functions} *)
 

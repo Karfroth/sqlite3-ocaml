@@ -17,8 +17,10 @@ let%test "test_error" =
   in
 
   (* This pattern shows typical usage *)
-  exec db "PRAGMA synchronous = OFF;" |> Rc.check;
-  exec db "PRAGMA journal_mode = MEMORY;" |> Rc.check;
+  (* NOT SUPPORTED BY DUCKDB *)
+  (* exec db "PRAGMA synchronous = OFF;" |> Rc.check; *)
+  (* NOT SUPPORTED BY DUCKDB *)
+  (* exec db "PRAGMA journal_mode = MEMORY;" |> Rc.check; *)
   let second_test =
     try
       exec db "THIS SHOULD THROW AN EXCEPTION;; BECAUSE IT IS NOT VALID;;"
@@ -32,9 +34,10 @@ let%test "test_error" =
   (* Check the extended error code. *)
   exec db "CREATE TABLE erc1 (x INTEGER UNIQUE NOT NULL CHECK (x > 0))"
   |> Rc.check;
-  exec db "CREATE TABLE erc2 (x INTEGER PRIMARY KEY, y REFERENCES erc1(x))"
-  |> Rc.check;
-  let erc_test expected_erc q =
+  (* NOT SUPPORTED BY DUCKDB: foreign key *)
+  (* exec db "CREATE TABLE erc2 (x INTEGER PRIMARY KEY, y REFERENCES erc1(x))"
+  |> Rc.check; *)
+  (* let erc_test expected_erc q =
     let _ = exec db q in
     let erc = extended_errcode_int db in
     if erc = expected_erc then (
@@ -44,10 +47,12 @@ let%test "test_error" =
       Printf.eprintf "Expected extended error code %d for %S, got %d.\n%!"
         expected_erc q erc;
       false)
-  in
+  in *)
 
-  first_test && second_test
-  && erc_test 1299 "INSERT INTO erc1 (x) VALUES (NULL)"
-  && erc_test 275 "INSERT INTO erc1 (x) VALUES (0)"
-  && erc_test 2067 "INSERT INTO erc1 (x) VALUES (1), (1)"
-  && erc_test 1555 "INSERT INTO erc2 (x) VALUES (1), (1)"
+  let res = first_test && second_test in
+  (* && erc_test 1299 "INSERT INTO erc1 (x) VALUES (NULL)" *)
+  (* && erc_test 275 "INSERT INTO erc1 (x) VALUES (0)" *)
+  (* && erc_test 2067 "INSERT INTO erc1 (x) VALUES (1), (1)" *)
+  (* && erc_test 1555 "INSERT INTO erc2 (x) VALUES (1), (1)" *)
+  let _ = db_close db in
+  res

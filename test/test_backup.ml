@@ -1,4 +1,4 @@
-open Sqlite3
+(* open Sqlite3
 
 let%test "test_backup" =
   (* Sql statements for this test *)
@@ -58,4 +58,4 @@ let%test "test_backup" =
   ignore (finalize select_stmt);
   assert (db_close src);
   assert (db_close dst);
-  true
+  true *)

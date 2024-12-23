@@ -1,4 +1,4 @@
-open Sqlite3
+(* open Sqlite3
 
 let%test "test_agg" =
   let db = db_open "t_agg" in
@@ -34,4 +34,4 @@ let%test "test_agg" =
             prerr_endline (errmsg db)
       with Sqlite3.Error s -> prerr_endline s)
     sqls;
-  true
+  true *)

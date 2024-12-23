@@ -337,8 +337,9 @@ external sleep : (int[@untagged]) -> (int[@untagged])
 
 external finalize : stmt -> Rc.t = "caml_sqlite3_stmt_finalize"
 
-external data_count : stmt -> (int[@untagged])
-  = "caml_sqlite3_data_count_bc" "caml_sqlite3_data_count"
+(* data_count is not supported by duckdb *)
+(* external data_count : stmt -> (int[@untagged])
+  = "caml_sqlite3_data_count_bc" "caml_sqlite3_data_count" *)
 
 external column_count : stmt -> (int[@untagged])
   = "caml_sqlite3_column_count_bc" "caml_sqlite3_column_count"
@@ -431,10 +432,10 @@ external busy_timeout : db -> (int[@untagged]) -> unit
 external enable_load_extension : db -> bool -> bool
   = "caml_sqlite3_enable_load_extension"
 
-let row_blobs stmt = Array.init (data_count stmt) (column_blob stmt)
-let row_data stmt = Array.init (data_count stmt) (column stmt)
-let row_names stmt = Array.init (data_count stmt) (column_name stmt)
-let row_decltypes stmt = Array.init (data_count stmt) (column_decltype stmt)
+let row_blobs stmt = Array.init (column_count stmt) (column_blob stmt)
+let row_data stmt = Array.init (column_count stmt) (column stmt)
+let row_names stmt = Array.init (column_count stmt) (column_name stmt)
+let row_decltypes stmt = Array.init (column_count stmt) (column_decltype stmt)
 
 let attempt_reset stmt rc =
   match reset stmt with Rc.OK -> rc | reset_rc -> reset_rc
@@ -475,7 +476,8 @@ let create_fun3 db name f =
 
 external delete_function : db -> string -> unit = "caml_sqlite3_delete_function"
 
-module Aggregate = struct
+(* NOT SUPPORTED BY DUCKDB: Aggregate function creation is not supported*)
+(* module Aggregate = struct
   external create_function :
     db ->
     string ->
@@ -523,9 +525,10 @@ module Aggregate = struct
       | Some inv -> Some (fun acc args -> inv acc args.(0) args.(1) args.(2))
       | None -> None)
       value final
-end
+end *)
 
-module Backup = struct
+(* Backup is not supported by duckdb *)
+(* module Backup = struct
   module Raw = struct
     type t
 
@@ -557,7 +560,7 @@ module Backup = struct
   let finish (b, _, _) = Raw.finish b
   let remaining (b, _, _) = Raw.remaining b
   let pagecount (b, _, _) = Raw.pagecount b
-end
+end *)
 
 (* Initialisation *)
 

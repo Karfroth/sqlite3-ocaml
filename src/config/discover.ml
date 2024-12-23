@@ -78,11 +78,11 @@ let add_compiler_args ~is_msvc ~cflags ~libs =
 let () =
   let module C = Configurator.V1 in
   C.main ~name:"sqlite3" (fun c ->
-      let is_macosx =
+      (* let is_macosx =
         opt_map (C.ocaml_config_var c "system") ~default:false ~f:(function
           | "macosx" -> true
           | _ -> false)
-      in
+      in *)
       let is_msvc =
         opt_map (C.ocaml_config_var c "ccomp_type") ~default:false ~f:(function
           | "msvc" -> true
@@ -104,24 +104,16 @@ let () =
           ^ " --cflags sqlite3"
         in
         match read_lines_from_cmd ~max_lines:1 cmd with
-        | [ cflags ] ->
-            let cflags = split_ws cflags in
-            if
-              is_macosx
-              || opt_is_some (getenv_opt "SQLITE3_DISABLE_LOADABLE_EXTENSIONS")
-            then "-DSQLITE3_DISABLE_LOADABLE_EXTENSIONS" :: cflags
-            else cflags
+        | [ cflags ] -> "-I../../../src/duckdb" :: (split_ws cflags)
         | _ -> failwith "pkg-config failed to return cflags"
       in
       let libs =
-        let cmd =
-          pkg_export
-          ^ (if is_mingw then " pkgconf " ^ personality else " pkg-config")
-          ^ " --libs sqlite3"
-        in
-        match read_lines_from_cmd ~max_lines:1 cmd with
-        | [ libs ] -> split_ws libs
-        | _ -> failwith "pkg-config failed to return libs"
+        [
+          "-Lsrc";
+          "-lduckdb_bundle";
+          "-lsqlite3_api_wrapper_static";
+          "-lstdc++"
+        ]
       in
       let conf = add_compiler_args ~is_msvc ~cflags ~libs in
       C.Flags.write_sexp "c_flags.sexp" conf.cflags;

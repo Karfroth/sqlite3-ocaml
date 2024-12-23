@@ -35,4 +35,5 @@ let%test "test_fun" =
             prerr_endline (errmsg db)
       with Sqlite3.Error s -> prerr_endline s)
     sqls;
+  assert (db_close db);
   true

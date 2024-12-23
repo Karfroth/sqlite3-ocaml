@@ -53,4 +53,5 @@ let%test "test_exec" =
       | _ -> assert false
     with xcp -> print_endline (Printexc.to_string xcp)
   done;
+  assert (db_close db);
   true

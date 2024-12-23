@@ -22,11 +22,12 @@ let%test "test_values" =
   let db = db_open "t_values" in
   let rc = exec db schema in
   Printf.printf "Created schema: %s" (Rc.to_string rc);
-  let insert_stmt = prepare db insert_sql in
+  
   let select_stmt = prepare db select_sql in
-
-  (* Insert values in row 1 *)
+  
   let test_float_val = 56.789 in
+  (* Insert values in row 1 *)
+  let insert_stmt = prepare db insert_sql in
   ignore (reset insert_stmt);
   ignore (bind insert_stmt 1 (Sqlite3.Data.INT 1L));
   ignore (bind insert_stmt 2 (Data.opt_text (Some "Hi Mom")));
@@ -35,8 +36,10 @@ let%test "test_values" =
   ignore (bind insert_stmt 5 (Data.opt_float (Some test_float_val)));
   ignore (bind insert_stmt 6 (Data.opt_bool (Some true)));
   ignore (step insert_stmt);
-
+  ignore (finalize insert_stmt);
+  
   (* Insert nulls in row 2 *)
+  let insert_stmt = prepare db insert_sql in
   ignore (reset insert_stmt);
   ignore (bind insert_stmt 1 (Sqlite3.Data.INT 2L));
   ignore (bind insert_stmt 2 (Data.opt_text None));
@@ -45,6 +48,7 @@ let%test "test_values" =
   ignore (bind insert_stmt 5 (Data.opt_float None));
   ignore (bind insert_stmt 6 (Data.opt_bool None));
   ignore (step insert_stmt);
+  ignore (finalize insert_stmt);
 
   (* Fetch data back with values *)
   ignore (reset select_stmt);
@@ -68,7 +72,6 @@ let%test "test_values" =
     assert (column_bool select_stmt 4 = false));
 
   (* Clean up *)
-  ignore (finalize insert_stmt);
   ignore (finalize select_stmt);
   assert (db_close db);
   true
